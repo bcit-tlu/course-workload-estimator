@@ -1,10 +1,9 @@
-# Dockerfile
-## Build
+## Build stage
 FROM node:24.6.0-alpine3.22 AS builder
 
 WORKDIR /app
 
-COPY package.json ./
+COPY package*.json ./
 
 RUN npm install
 
@@ -13,23 +12,15 @@ COPY . /app
 RUN npm run build
 
 
-## Clean
-FROM nginx:alpine AS cleaner
-
-WORKDIR /usr/share/nginx/html
-
-RUN rm -rf ./*
-
-COPY --from=builder /app/dist ./
-
-
-## Release
+## Release/production
 FROM nginxinc/nginx-unprivileged:alpine3.22-perl
 
 LABEL maintainer=courseproduction@bcit.ca
-LABEL org.opencontainers.image.source="https://github.com/bcit-ltc/course-workload-estimator"
+LABEL org.opencontainers.image.source="https://github.com/bcit-tlu/course-workload-estimator"
+LABEL org.opencontainers.image.description="A time calculator to estimate the number of hours of work learners might be expected to spend completing coursework."
+
+COPY conf.d/default.conf /etc/nginx/conf.d/default.conf
 
 WORKDIR /usr/share/nginx/html
 
-COPY conf.d/default.conf /etc/nginx/conf.d/default.conf
-COPY --from=cleaner /usr/share/nginx/html/ ./
+COPY --from=builder /app/dist/ ./
