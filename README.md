@@ -21,4 +21,4 @@ Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public L
 
 ## About
 
-Developed in 🇨🇦 Canada at [BCIT's](https://www.bcit.ca/) [Learning and Teaching Centre](https://www.bcit.ca/learning-teaching-centre/). [Contact Us](mailto:courseproduction@bcit.ca).
+Developed in 🇨🇦 Canada at BCIT's Learning and Teaching Centre. [Contact Us](mailto:courseproduction@bcit.ca).
