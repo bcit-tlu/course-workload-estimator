@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.1.0](https://github.com/bcit-tlu/course-workload-estimator/compare/v1.0.10...v1.1.0) (2026-05-15)
+
+
+### Features
+
+* Update README.md ([b4087d2](https://github.com/bcit-tlu/course-workload-estimator/commit/b4087d2adc2b44f30ee9f498c9514502b2dfad01))
+
+
+### Bug Fixes
+
+* align release-please manifest with latest tag v1.0.10 ([002b488](https://github.com/bcit-tlu/course-workload-estimator/commit/002b4888ab7ee39733053aac9a040523e5e2ece5))
+* align release-please manifest with latest tag v1.0.10 ([55df7d4](https://github.com/bcit-tlu/course-workload-estimator/commit/55df7d4cbf1e0640b454dbd574d25d412c42fbe8))
+* switch release-please strategy from simple to node ([59375e0](https://github.com/bcit-tlu/course-workload-estimator/commit/59375e0977d055ca4200e2aaa070430a35817693))
+* Update README.md ([797e50f](https://github.com/bcit-tlu/course-workload-estimator/commit/797e50f1c78a603716e18f049bca944683e1b113))
+* Update README.md ([6c4fe88](https://github.com/bcit-tlu/course-workload-estimator/commit/6c4fe8810a2744bee6f5d840355902342511a3de))
+* use correct release-please output key for root package dispatch ([077078d](https://github.com/bcit-tlu/course-workload-estimator/commit/077078dd9f4b0cb5515bc86df22575e471c422cf))
+* use correct release-please output key for root package dispatch ([7a54da8](https://github.com/bcit-tlu/course-workload-estimator/commit/7a54da8f395302c2940a5c547a1133d5bdd989d2))
+
 ## [1.0.2](https://github.com/bcit-tlu/course-workload-estimator/compare/v1.0.1...v1.0.2) (2026-05-15)
 
 
