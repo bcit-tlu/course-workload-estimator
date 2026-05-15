@@ -6,7 +6,6 @@
   "packages": {
     ".": {
       "release-type": "node",
-      "component": "course-workload-estimator",
       "extra-files": [
         {
           "type": "generic",
