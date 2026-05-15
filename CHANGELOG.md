@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/bcit-tlu/course-workload-estimator/compare/v1.2.1...v1.2.2) (2026-05-15)
+
+
+### Bug Fixes
+
+* switch release-type from node to simple ([7d09b8e](https://github.com/bcit-tlu/course-workload-estimator/commit/7d09b8e87c4d57aedb2421901d94387e40ff6133))
+
 ## [1.2.1](https://github.com/bcit-tlu/course-workload-estimator/compare/v1.2.0...v1.2.1) (2026-05-15)
 
 
