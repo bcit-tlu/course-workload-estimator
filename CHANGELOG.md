@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.1](https://github.com/bcit-tlu/course-workload-estimator/compare/v1.2.0...v1.2.1) (2026-05-15)
+
+
+### Bug Fixes
+
+* remove component field from release-please config ([16f31cd](https://github.com/bcit-tlu/course-workload-estimator/commit/16f31cdabc554dc38d65063879c8f0510452acb4))
+* remove component field from release-please config ([ffe3efc](https://github.com/bcit-tlu/course-workload-estimator/commit/ffe3efcdb5347d542b2ab6111819b92569917d49))
+
 ## [1.2.0](https://github.com/bcit-tlu/course-workload-estimator/compare/v1.1.0...v1.2.0) (2026-05-15)
 
 
