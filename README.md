@@ -21,4 +21,4 @@ Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public L
 
 ## About
 
-Developed in 🇨🇦 Canada at BCIT's Learning and Teaching Centre.
+Developed at BCIT's Learning and Teaching Centre in 🇨🇦 Canada.
