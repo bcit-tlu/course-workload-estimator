@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.0](https://github.com/bcit-tlu/course-workload-estimator/compare/v1.2.2...v1.3.0) (2026-05-22)
+
+
+### Features
+
+* add OpenTelemetry browser analytics with OTLP log export ([64bfe4c](https://github.com/bcit-tlu/course-workload-estimator/commit/64bfe4ca936f46cf11e8f4ff42065dfb6b3cb0e3))
+* add OpenTelemetry browser analytics with OTLP log export ([4eb1c3a](https://github.com/bcit-tlu/course-workload-estimator/commit/4eb1c3a6186a35f50cef25d8070d52d83ee78d87))
+
 ## [1.2.2](https://github.com/bcit-tlu/course-workload-estimator/compare/v1.2.1...v1.2.2) (2026-05-15)
 
 
