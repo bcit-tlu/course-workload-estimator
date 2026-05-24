@@ -1,4 +1,4 @@
-## Build stage
+# Build stage
 FROM node:24.6.0-alpine3.22 AS builder
 
 WORKDIR /app
@@ -12,7 +12,7 @@ COPY . /app
 RUN npm run build
 
 
-## Release/production
+# Release/production
 FROM nginxinc/nginx-unprivileged:alpine3.22-perl
 
 LABEL maintainer=courseproduction@bcit.ca
