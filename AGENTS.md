@@ -24,6 +24,13 @@
 - `/webpack.dev.js` — Webpack development configuration
 - `/webpack.prod.js` — Webpack production build and compression settings
 
+## Development Workflow
+
+- Create feature branches from `main`
+- Use pull requests for code review
+- PR titles must follow conventional commit format (enforced by `pr-title-lint.yaml`)
+- Squash commits before merging
+
 ## CI/CD
 
 - CI uses shared `bcit-tlu/.github` OCI build reusable workflow
