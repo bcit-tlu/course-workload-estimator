@@ -4,8 +4,10 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import HelpIcon from '@mui/icons-material/Help';
 import Collapse from '@mui/material/Collapse';
+import { useTrackEvent } from '../analytics/AnalyticsContext';
 
 export default function CustomTextField(props) {
+    const trackEvent = useTrackEvent();
     const [customState, setCustomState] = useState(props.defaultState);
     const [isError, setIsError] = useState(false);
     const [clicked, setClicked] = React.useState(false);
@@ -31,6 +33,13 @@ export default function CustomTextField(props) {
             }
         } else {
             setCustomState(newInputValue);
+            if (props.selectContent) {
+                const selected = props.selectContent.find(item => item.value === newInputValue);
+                trackEvent('activity_selected', {
+                    activity_name: selected ? selected.text : String(newInputValue),
+                    activity_index: newInputValue,
+                });
+            }
         }
     };
     const handleClick = () => {

@@ -14,8 +14,10 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import components from '../helpers/components';
 import UploadCsv from './uploadCsv';
+import { useTrackEvent } from '../analytics/AnalyticsContext';
 
 export default function Summary(props) {
+    const trackEvent = useTrackEvent();
     let colors = {};
     let componentColors = ['#77dd77', '#aec6cf', '#ffd1dc', '#b39eb5', '#FDE541', '#ffb347', '#ff6961'];
 
@@ -254,7 +256,7 @@ export default function Summary(props) {
                 jsonSummary.length ?
                     <Fragment>
                         <Box textAlign='right' className='no-print'>
-                            <Button variant="outlined" color="error" size="small" sx={{ textTransform: "none" }} onClick={() => { localStorage.removeItem('bcitcourseworkloadestimator'); props.updateSummary(null); }}>clear all</Button>
+                            <Button variant="outlined" color="error" size="small" sx={{ textTransform: "none" }} onClick={() => { localStorage.removeItem('bcitcourseworkloadestimator'); props.updateSummary(null); trackEvent('summary_cleared'); }}>clear all</Button>
                         </Box>
                         <Box sx={boxStyle}>
                             <TableContainer component={Paper} sx={{ width: "fit-content", margin: "0 auto" }}>

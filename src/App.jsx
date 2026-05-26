@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -30,6 +30,8 @@ import CourseActivity from './components/CourseActivity';
 import Summary from './components/Summary';
 import logo from './assets/bcit_rev.png';
 import Link from '@mui/material/Link';
+import { AnalyticsProvider, useTrackEvent } from './analytics/AnalyticsContext';
+import { logEvent } from './analytics/init';
 
 const LOGO_SRC = process.env.NODE_ENV === 'production' ? '/bcit_rev.png' : logo;
 
@@ -69,6 +71,11 @@ const App = () => {
     const [courseDuration, setCourseDuration] = useState(12);
     const [courseCredits, setCourseCredits] = useState(3);
     const [summary, setSummary] = useState(localStorage.getItem('bcitcourseworkloadestimator'));
+    const trackEvent = useTrackEvent();
+
+    useEffect(() => {
+        logEvent('page_view', { url: window.location.href });
+    }, []);
     const activityDesciptions = [
         <div>
             <p>Use <strong>Course Meetings per Week</strong> for scheduled synchronous (same time, same place) in-person and/or online sessions which students are expected to attend each week during the length of the course (vectored scheduling).</p>
@@ -100,6 +107,7 @@ const App = () => {
         const isNumber = /^\d*\.?\d*$/.test(event.target.value);
         if (isNumber) {
             setCourseDuration(event.target.value);
+            trackEvent('course_duration_changed', { new_value: event.target.value });
         }
     };
 
@@ -107,12 +115,18 @@ const App = () => {
         const isNumber = /^\d*\.?\d*$/.test(event.target.value);
         if (isNumber) {
             setCourseCredits(event.target.value);
+            trackEvent('course_credits_changed', { new_value: event.target.value });
         }
     };
 
     const handleCourseComponentField = (event) => {
+        const index = parseInt(event.target.value);
         setActivityIndex(0);
-        setComponentIndex(parseInt(event.target.value));
+        setComponentIndex(index);
+        trackEvent('component_selected', {
+            component_name: Object.keys(components)[index],
+            component_index: index,
+        });
     };
 
     const updateSummary = (newActivityString) => {
@@ -174,7 +188,7 @@ const App = () => {
                             </Grid>
 
                         </Grid>
-                        <Accordion autoFocus className='no-print'>
+                        <Accordion autoFocus className='no-print' onChange={(_, expanded) => expanded && trackEvent('accordion_expanded', { accordion_title: 'About this Course Workload Estimator' })}>
                             <AccordionSummary className='accordion-summary-background' expandIcon={<ExpandMoreIcon />} aria-controls="about-this-panel">
                                 <Typography>About this Course Workload Estimator</Typography>
                             </AccordionSummary>
@@ -190,7 +204,7 @@ const App = () => {
                                 <p>You might share the results of the Estimator with your students to show them the overall workload they can expect and plan for. Or you can also just use the results to communicate to your students how much homework they can expect.</p>
                             </AccordionDetails>
                         </Accordion>
-                        <Accordion autoFocus className='no-print'>
+                        <Accordion autoFocus className='no-print' onChange={(_, expanded) => expanded && trackEvent('accordion_expanded', { accordion_title: 'What is Scheduled Learning?' })}>
                             <AccordionSummary className='accordion-summary-background' expandIcon={<ExpandMoreIcon />} aria-controls="scheduled-learning-panel">
                                 <Typography>What is "Scheduled Learning"?</Typography>
                             </AccordionSummary>
@@ -200,7 +214,7 @@ const App = () => {
                                 <p>Scheduled learning is divided into "synchronous" and "asynchronous", where synchronous activities are taking place in the same location at the same time (online or in-person), and asynchronous activities are components that you've assigned to your students that can be completed outside of synchronous time. Your entire course might be asynchronous, such as some of our fully online courses, and they are also counted as scheduled learning.</p>
                             </AccordionDetails>
                         </Accordion>
-                        <Accordion autoFocus className='no-print'>
+                        <Accordion autoFocus className='no-print' onChange={(_, expanded) => expanded && trackEvent('accordion_expanded', { accordion_title: 'Details of Estimation Calculation & Sources' })}>
                             <AccordionSummary className='accordion-summary-background' expandIcon={<ExpandMoreIcon />} aria-controls="estimation-calculation-panel">
                                 <Typography>Details of Estimation Calculation & Sources</Typography>
                             </AccordionSummary>
@@ -353,7 +367,7 @@ const App = () => {
                                 <p>Barre, B., Brown, A., & Esarey, J. (n.d.). Workload Estimator 2.0. Retrieved March 22, 2023 from <a href="https://cat.wfu.edu/resources/tools/estimator2" target="_blank">https://cat.wfu.edu/resources/tools/estimator2</a>.</p>
                             </AccordionDetails>
                         </Accordion>
-                        <Accordion autoFocus className='no-print'>
+                        <Accordion autoFocus className='no-print' onChange={(_, expanded) => expanded && trackEvent('accordion_expanded', { accordion_title: 'Credits and CC License' })}>
                             <AccordionSummary className='accordion-summary-background' expandIcon={<ExpandMoreIcon />} aria-controls="credits-and-license-panel">
                                 <Typography>Credits and CC License</Typography>
                             </AccordionSummary>
@@ -382,4 +396,10 @@ const App = () => {
     );
 };
 
-export default App;
+const AppWithAnalytics = () => (
+    <AnalyticsProvider>
+        <App />
+    </AnalyticsProvider>
+);
+
+export default AppWithAnalytics;
