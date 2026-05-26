@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.0](https://github.com/bcit-tlu/course-workload-estimator/compare/v1.3.0...v1.4.0) (2026-05-26)
+
+
+### Features
+
+* add comprehensive user interaction tracking with OpenTelemetry ([933cac8](https://github.com/bcit-tlu/course-workload-estimator/commit/933cac888c883dbb5e7eedba898cfd5eacfc3762))
+* add comprehensive user interaction tracking with OpenTelemetry ([c799cdf](https://github.com/bcit-tlu/course-workload-estimator/commit/c799cdf9863b2f09dfa28c4c21516b2fe3196ffd))
+
 ## [1.3.0](https://github.com/bcit-tlu/course-workload-estimator/compare/v1.2.2...v1.3.0) (2026-05-22)
 
 
