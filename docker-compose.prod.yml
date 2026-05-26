@@ -1,0 +1,33 @@
+name: ${APP_NAME:-course-workload-estimator}-prod
+
+services:
+
+  app:
+    build:
+      context: .
+      platforms:
+        - linux/amd64
+        - linux/arm64
+
+    environment:
+      - NODE_ENV=production
+
+    ports:
+      - "8080:8080"
+
+    depends_on:
+      - otel-collector
+
+  # Local stand-in for the in-cluster OpenTelemetry Collector. The nginx
+  # config proxies /v1/logs to opentelemetry-collector.observability.svc:4318,
+  # so we expose this service under that exact DNS name via a network alias.
+  otel-collector:
+    image: otel/opentelemetry-collector:latest
+    # Config is inlined via the collector's built-in `yaml:` config provider
+    # so this stack stays self-contained (no extra files in the repo).
+    command:
+      - '--config=yaml:{receivers: {otlp: {protocols: {http: {endpoint: "0.0.0.0:4318"}}}}, exporters: {debug: {verbosity: detailed}}, service: {pipelines: {logs: {receivers: [otlp], exporters: [debug]}}}}'
+    networks:
+      default:
+        aliases:
+          - opentelemetry-collector.observability.svc

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
@@ -37,7 +37,12 @@ export default function CustomTextField(props) {
         setClicked((prev) => !prev);
     };
 
+    const isInitialMount = useRef(true);
     useEffect(() => {
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+            return;
+        }
         props.updateState(customState);
     }, [customState]);
 

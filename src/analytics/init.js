@@ -14,13 +14,15 @@ import { NavigationTimingInstrumentation } from '@opentelemetry/browser-instrume
 import { UserActionInstrumentation } from '@opentelemetry/browser-instrumentation/experimental/user-action';
 import { WebVitalsInstrumentation } from '@opentelemetry/browser-instrumentation/experimental/web-vitals';
 import { ErrorsInstrumentation } from '@opentelemetry/browser-instrumentation/experimental/errors';
+import pkg from '../../package.json';
+const { version } = pkg;
 
 export function initAnalytics() {
   const isProduction = process.env.NODE_ENV === 'production';
 
   const resource = resourceFromAttributes({
     [ATTR_SERVICE_NAME]: 'course-workload-estimator',
-    [ATTR_SERVICE_VERSION]: '1.2.2',
+    [ATTR_SERVICE_VERSION]: version,
   });
 
   const logExporter = isProduction
@@ -47,4 +49,21 @@ export function initAnalytics() {
       new ErrorsInstrumentation(),
     ],
   });
+}
+
+export function logEvent(eventName, attributes = {}) {
+  try {
+    const logger = logs.getLogger('analytics');
+    logger.emit({
+      body: eventName,
+      severityNumber: SeverityNumber.INFO,
+      severityText: 'INFO',
+      attributes: { 'event.name': eventName, ...attributes },
+    });
+  } catch (e) {
+    // Analytics must never break the UI
+    if (process.env.NODE_ENV !== 'production') {
+      console.debug('[analytics] logEvent failed', e);
+    }
+  }
 }

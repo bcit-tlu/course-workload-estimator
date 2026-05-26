@@ -30,6 +30,7 @@ import CourseActivity from './components/CourseActivity';
 import Summary from './components/Summary';
 import logo from './assets/bcit_rev.png';
 import Link from '@mui/material/Link';
+import { AnalyticsProvider, useTrackEvent } from './analytics/AnalyticsContext';
 
 const LOGO_SRC = process.env.NODE_ENV === 'production' ? '/bcit_rev.png' : logo;
 
@@ -69,6 +70,8 @@ const App = () => {
     const [courseDuration, setCourseDuration] = useState(12);
     const [courseCredits, setCourseCredits] = useState(3);
     const [summary, setSummary] = useState(localStorage.getItem('bcitcourseworkloadestimator'));
+    const trackEvent = useTrackEvent();
+
     const activityDesciptions = [
         <div>
             <p>Use <strong>Course Meetings per Week</strong> for scheduled synchronous (same time, same place) in-person and/or online sessions which students are expected to attend each week during the length of the course (vectored scheduling).</p>
@@ -103,6 +106,10 @@ const App = () => {
         }
     };
 
+    const handleCourseDurationBlur = (event) => {
+        trackEvent('course_duration_changed', { new_value: String(event.target.value) });
+    };
+
     const handleCourseCreditsField = (event) => {
         const isNumber = /^\d*\.?\d*$/.test(event.target.value);
         if (isNumber) {
@@ -110,9 +117,29 @@ const App = () => {
         }
     };
 
+    const handleCourseCreditsBlur = (event) => {
+        trackEvent('course_credits_changed', { new_value: String(event.target.value) });
+    };
+
+    const handleActivitySelected = (index) => {
+        setActivityIndex(index);
+        const componentName = Object.keys(components)[componentIndex];
+        const activity = components[componentName]?.[index] || 'Unknown';
+        trackEvent('activity_selected', {
+            activity_name: activity,
+            activity_index: index,
+            component_name: componentName,
+        });
+    };
+
     const handleCourseComponentField = (event) => {
+        const index = parseInt(event.target.value);
         setActivityIndex(0);
-        setComponentIndex(parseInt(event.target.value));
+        setComponentIndex(index);
+        trackEvent('component_selected', {
+            component_name: Object.keys(components)[index],
+            component_index: index,
+        });
     };
 
     const updateSummary = (newActivityString) => {
@@ -146,8 +173,8 @@ const App = () => {
                                 <Box sx={boxStyle}>
                                     <FormControl fullWidth className='calculator-text-field'>
                                         <FormLabel>Course Details:</FormLabel>
-                                        <TextField size="small" fullWidth label="Number of scheduled weeks" value={courseDuration} type="number" InputProps={{ inputProps: { min: 0 }, endAdornment: " weeks" }} onChange={handleCourseDurationField} />
-                                        <TextField size="small" fullWidth label="Number of credits" value={courseCredits} type="number" InputProps={{ inputProps: { min: 0.5, step: 0.5 } }} onChange={handleCourseCreditsField} />
+                                        <TextField size="small" fullWidth label="Number of scheduled weeks" value={courseDuration} type="number" InputProps={{ inputProps: { min: 0 }, endAdornment: " weeks" }} onChange={handleCourseDurationField} onBlur={handleCourseDurationBlur} />
+                                        <TextField size="small" fullWidth label="Number of credits" value={courseCredits} type="number" InputProps={{ inputProps: { min: 0.5, step: 0.5 } }} onChange={handleCourseCreditsField} onBlur={handleCourseCreditsBlur} />
                                     </FormControl>
                                 </Box>
                                 <Box sx={boxStyle}>
@@ -163,7 +190,7 @@ const App = () => {
                             </Grid>
                             <Grid item xs={12} sm={7} md={7} lg={4} xl={3} className="no-print">
                                 <Box sx={boxStyle} className="course-components-container" key={"course-activities-" + componentIndex}>
-                                    <CustomTextField fieldLabel="Course Activity" defaultState={activityIndex} updateState={setActivityIndex} collapseContent={activityDesciptions[componentIndex]} selectContent={activities} />
+                                    <CustomTextField fieldLabel="Course Activity" defaultState={activityIndex} updateState={handleActivitySelected} collapseContent={activityDesciptions[componentIndex]} selectContent={activities} />
 
                                     <CourseActivity componentIndex={componentIndex} activityIndex={activityIndex} updateSummary={updateSummary} activityName={activities[activityIndex].text}></CourseActivity>
                                 </Box>
@@ -174,7 +201,7 @@ const App = () => {
                             </Grid>
 
                         </Grid>
-                        <Accordion autoFocus className='no-print'>
+                        <Accordion autoFocus className='no-print' onChange={(_, expanded) => expanded && trackEvent('accordion_expanded', { accordion_title: 'About this Course Workload Estimator' })}>
                             <AccordionSummary className='accordion-summary-background' expandIcon={<ExpandMoreIcon />} aria-controls="about-this-panel">
                                 <Typography>About this Course Workload Estimator</Typography>
                             </AccordionSummary>
@@ -190,7 +217,7 @@ const App = () => {
                                 <p>You might share the results of the Estimator with your students to show them the overall workload they can expect and plan for. Or you can also just use the results to communicate to your students how much homework they can expect.</p>
                             </AccordionDetails>
                         </Accordion>
-                        <Accordion autoFocus className='no-print'>
+                        <Accordion autoFocus className='no-print' onChange={(_, expanded) => expanded && trackEvent('accordion_expanded', { accordion_title: 'What is Scheduled Learning?' })}>
                             <AccordionSummary className='accordion-summary-background' expandIcon={<ExpandMoreIcon />} aria-controls="scheduled-learning-panel">
                                 <Typography>What is "Scheduled Learning"?</Typography>
                             </AccordionSummary>
@@ -200,7 +227,7 @@ const App = () => {
                                 <p>Scheduled learning is divided into "synchronous" and "asynchronous", where synchronous activities are taking place in the same location at the same time (online or in-person), and asynchronous activities are components that you've assigned to your students that can be completed outside of synchronous time. Your entire course might be asynchronous, such as some of our fully online courses, and they are also counted as scheduled learning.</p>
                             </AccordionDetails>
                         </Accordion>
-                        <Accordion autoFocus className='no-print'>
+                        <Accordion autoFocus className='no-print' onChange={(_, expanded) => expanded && trackEvent('accordion_expanded', { accordion_title: 'Details of Estimation Calculation & Sources' })}>
                             <AccordionSummary className='accordion-summary-background' expandIcon={<ExpandMoreIcon />} aria-controls="estimation-calculation-panel">
                                 <Typography>Details of Estimation Calculation & Sources</Typography>
                             </AccordionSummary>
@@ -353,7 +380,7 @@ const App = () => {
                                 <p>Barre, B., Brown, A., & Esarey, J. (n.d.). Workload Estimator 2.0. Retrieved March 22, 2023 from <a href="https://cat.wfu.edu/resources/tools/estimator2" target="_blank">https://cat.wfu.edu/resources/tools/estimator2</a>.</p>
                             </AccordionDetails>
                         </Accordion>
-                        <Accordion autoFocus className='no-print'>
+                        <Accordion autoFocus className='no-print' onChange={(_, expanded) => expanded && trackEvent('accordion_expanded', { accordion_title: 'Credits and CC License' })}>
                             <AccordionSummary className='accordion-summary-background' expandIcon={<ExpandMoreIcon />} aria-controls="credits-and-license-panel">
                                 <Typography>Credits and CC License</Typography>
                             </AccordionSummary>
@@ -382,4 +409,10 @@ const App = () => {
     );
 };
 
-export default App;
+const AppWithAnalytics = () => (
+    <AnalyticsProvider>
+        <App />
+    </AnalyticsProvider>
+);
+
+export default AppWithAnalytics;

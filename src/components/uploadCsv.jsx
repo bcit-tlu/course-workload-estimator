@@ -6,8 +6,10 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import CSVReader from 'react-csv-reader';
+import { useTrackEvent } from '../analytics/AnalyticsContext';
 
 function UploadCsv(props) {
+    const trackEvent = useTrackEvent();
     const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
     const [errorDialogOpen, setErrorDialogOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
@@ -120,6 +122,7 @@ function UploadCsv(props) {
             });
 
             props.updateSummary(JSON.stringify(formattedData));
+            trackEvent('csv_uploaded', { row_count: formattedData.length });
         } else {
             handleError(new Error("The CSV file has invalid data. Please check the format and try again."));
         }

@@ -16,9 +16,11 @@ import PresentationCalculator from '../calculators/projects/PresentationCalculat
 import ExamCalculator from '../calculators/assessments/ExamCalculator';
 import QuizCalculator from '../calculators/assessments/QuizCalculator';
 import CustomAssignmentCalculator from '../calculators/customs/CustomAssignmentCalculator';
+import { useTrackEvent } from '../analytics/AnalyticsContext';
 
 
 export default function CourseActivity(props) {
+    const trackEvent = useTrackEvent();
     const [activityName, setActivityName] = useState("");
     const [s_weeklyHours, set_s_weeklyHours] = useState(0);
     const [s_termHours, set_s_termHours] = useState(0);
@@ -96,28 +98,13 @@ export default function CourseActivity(props) {
             let newActivityString = createActivityString(props.componentIndex, props.activityIndex, activityName, s_weeklyHours, s_termHours, a_weeklyHours, a_termHours);
             await props.updateSummary(newActivityString);
 
-            if (typeof window !== 'undefined' && window.plausible) {
-                const componentKeys = Object.keys(components);
-                const component = componentKeys[props.componentIndex] || 'Unknown';
-                const activity = components[component]?.[props.activityIndex] || 'Unknown';
-                const hasCustomName = activityName && String(activityName).trim() ? 'yes' : 'no';
-                const payload = {
-                    component,
-                    activity,
-                    has_custom_name: hasCustomName,
-                    hours_sync_weekly: String(s_weeklyHours),
-                    hours_sync_term: String(s_termHours),
-                    hours_async_weekly: String(a_weeklyHours),
-                    hours_async_term: String(a_termHours),
-                };
-                window.plausible('Activity Added', {
-                    props: {
-                        ...payload,
-                        activity_custom_name: `${activity} · ${hasCustomName}`,
-                        event_payload: JSON.stringify(payload),
-                    },
-                });
-            }
+            const componentKeys = Object.keys(components);
+            const componentName = componentKeys[props.componentIndex] || 'Unknown';
+            trackEvent('activity_added_to_summary', {
+                activity_name: props.activityName,
+                component_name: componentName,
+                hours_calculated: String(s_weeklyHours + s_termHours + a_weeklyHours + a_termHours),
+            });
         } catch (error) {
             console.error("Error in addActivity", error);
         }
