@@ -62,5 +62,8 @@ export function logEvent(eventName, attributes = {}) {
     });
   } catch (e) {
     // Analytics must never break the UI
+    if (process.env.NODE_ENV !== 'production') {
+      console.debug('[analytics] logEvent failed', e);
+    }
   }
 }

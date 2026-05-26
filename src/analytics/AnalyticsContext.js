@@ -1,16 +1,22 @@
-import React, { createContext, useContext, useMemo } from 'react';
+import React, { createContext, useContext } from 'react';
 import { useAnalytics } from './useAnalytics';
 
-const AnalyticsContext = createContext({ trackEvent: () => {} });
+const AnalyticsContext = createContext({
+  trackEvent: () => {},
+  trackPageView: () => {},
+});
 
 export function AnalyticsProvider({ children }) {
   const analytics = useAnalytics();
-  const value = useMemo(() => analytics, [analytics]);
   return (
-    <AnalyticsContext.Provider value={value}>
+    <AnalyticsContext.Provider value={analytics}>
       {children}
     </AnalyticsContext.Provider>
   );
+}
+
+export function useAnalyticsContext() {
+  return useContext(AnalyticsContext);
 }
 
 export function useTrackEvent() {

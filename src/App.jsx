@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -31,7 +31,6 @@ import Summary from './components/Summary';
 import logo from './assets/bcit_rev.png';
 import Link from '@mui/material/Link';
 import { AnalyticsProvider, useTrackEvent } from './analytics/AnalyticsContext';
-import { logEvent } from './analytics/init';
 
 const LOGO_SRC = process.env.NODE_ENV === 'production' ? '/bcit_rev.png' : logo;
 
@@ -73,9 +72,6 @@ const App = () => {
     const [summary, setSummary] = useState(localStorage.getItem('bcitcourseworkloadestimator'));
     const trackEvent = useTrackEvent();
 
-    useEffect(() => {
-        logEvent('page_view', { url: window.location.href });
-    }, []);
     const activityDesciptions = [
         <div>
             <p>Use <strong>Course Meetings per Week</strong> for scheduled synchronous (same time, same place) in-person and/or online sessions which students are expected to attend each week during the length of the course (vectored scheduling).</p>
@@ -107,16 +103,33 @@ const App = () => {
         const isNumber = /^\d*\.?\d*$/.test(event.target.value);
         if (isNumber) {
             setCourseDuration(event.target.value);
-            trackEvent('course_duration_changed', { new_value: event.target.value });
         }
+    };
+
+    const handleCourseDurationBlur = (event) => {
+        trackEvent('course_duration_changed', { new_value: String(event.target.value) });
     };
 
     const handleCourseCreditsField = (event) => {
         const isNumber = /^\d*\.?\d*$/.test(event.target.value);
         if (isNumber) {
             setCourseCredits(event.target.value);
-            trackEvent('course_credits_changed', { new_value: event.target.value });
         }
+    };
+
+    const handleCourseCreditsBlur = (event) => {
+        trackEvent('course_credits_changed', { new_value: String(event.target.value) });
+    };
+
+    const handleActivitySelected = (index) => {
+        setActivityIndex(index);
+        const componentName = Object.keys(components)[componentIndex];
+        const activity = components[componentName]?.[index] || 'Unknown';
+        trackEvent('activity_selected', {
+            activity_name: activity,
+            activity_index: index,
+            component_name: componentName,
+        });
     };
 
     const handleCourseComponentField = (event) => {
@@ -160,8 +173,8 @@ const App = () => {
                                 <Box sx={boxStyle}>
                                     <FormControl fullWidth className='calculator-text-field'>
                                         <FormLabel>Course Details:</FormLabel>
-                                        <TextField size="small" fullWidth label="Number of scheduled weeks" value={courseDuration} type="number" InputProps={{ inputProps: { min: 0 }, endAdornment: " weeks" }} onChange={handleCourseDurationField} />
-                                        <TextField size="small" fullWidth label="Number of credits" value={courseCredits} type="number" InputProps={{ inputProps: { min: 0.5, step: 0.5 } }} onChange={handleCourseCreditsField} />
+                                        <TextField size="small" fullWidth label="Number of scheduled weeks" value={courseDuration} type="number" InputProps={{ inputProps: { min: 0 }, endAdornment: " weeks" }} onChange={handleCourseDurationField} onBlur={handleCourseDurationBlur} />
+                                        <TextField size="small" fullWidth label="Number of credits" value={courseCredits} type="number" InputProps={{ inputProps: { min: 0.5, step: 0.5 } }} onChange={handleCourseCreditsField} onBlur={handleCourseCreditsBlur} />
                                     </FormControl>
                                 </Box>
                                 <Box sx={boxStyle}>
@@ -177,7 +190,7 @@ const App = () => {
                             </Grid>
                             <Grid item xs={12} sm={7} md={7} lg={4} xl={3} className="no-print">
                                 <Box sx={boxStyle} className="course-components-container" key={"course-activities-" + componentIndex}>
-                                    <CustomTextField fieldLabel="Course Activity" defaultState={activityIndex} updateState={setActivityIndex} collapseContent={activityDesciptions[componentIndex]} selectContent={activities} />
+                                    <CustomTextField fieldLabel="Course Activity" defaultState={activityIndex} updateState={handleActivitySelected} collapseContent={activityDesciptions[componentIndex]} selectContent={activities} />
 
                                     <CourseActivity componentIndex={componentIndex} activityIndex={activityIndex} updateSummary={updateSummary} activityName={activities[activityIndex].text}></CourseActivity>
                                 </Box>

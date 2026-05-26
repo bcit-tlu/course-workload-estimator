@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useMemo, useRef, useCallback } from 'react';
 import { logEvent } from './init';
 
 function getSessionId() {
@@ -36,6 +36,7 @@ export function useAnalytics() {
 
   useEffect(() => {
     trackEvent('session_start', { timestamp: new Date().toISOString() });
+    trackPageView();
 
     const interval = setInterval(() => {
       if (!document.hidden) {
@@ -46,7 +47,7 @@ export function useAnalytics() {
     }, 60_000);
 
     return () => clearInterval(interval);
-  }, [trackEvent]);
+  }, [trackEvent, trackPageView]);
 
-  return { trackEvent, trackPageView };
+  return useMemo(() => ({ trackEvent, trackPageView }), [trackEvent, trackPageView]);
 }
