@@ -33,8 +33,8 @@ export default function MeetingCalculator(props) {
     return (
         <Fragment>
             <CustomTextField fieldLabel="Meeting Name (Optional)" defaultState={""} updateState={setActivityName} />
-            <CustomTextField fieldLabel={"Meetings per " + meetingType} defaultState={1} updateState={setMeetingQuantity} fieldType="number" inputProps={{ inputProps: { min: 0 }, endAdornment: (<InputAdornment position="end">{`/${meetingType}`}</InputAdornment>) }} />
-            <CustomTextField fieldLabel="Meetings length (hours)" defaultState={1} updateState={setMeetingLength} fieldType="number" inputProps={{ inputProps: { min: 0, step: 0.5 }, endAdornment: "hours" }} />
+            <CustomTextField fieldLabel={"Meetings per " + meetingType} defaultState={1} updateState={setMeetingQuantity} fieldType="number" slotProps={{ htmlInput: { min: 0 }, input: { endAdornment: <InputAdornment position="end">{`/${meetingType}`}</InputAdornment> } }} />
+            <CustomTextField fieldLabel="Meetings length (hours)" defaultState={1} updateState={setMeetingLength} fieldType="number" slotProps={{ htmlInput: { min: 0, step: 0.5 }, input: { endAdornment: <InputAdornment position="end">hours</InputAdornment> } }} />
         </Fragment>
     );
 }

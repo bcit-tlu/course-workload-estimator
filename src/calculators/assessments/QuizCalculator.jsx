@@ -1,5 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import CustomTextField from '../../helpers/CustomTextField';
+import InputAdornment from '@mui/material/InputAdornment';
 
 
 export default function QuizCalculator(props) {
@@ -41,9 +42,9 @@ export default function QuizCalculator(props) {
         <Fragment>
             <CustomTextField fieldLabel="Quiz/Test Name (Optional)" defaultState="" updateState={setActivityName} />
 
-            <CustomTextField fieldLabel="Quiz/Test per Term" defaultState={2} updateState={setQuizQuantity} fieldType="number" inputProps={{ inputProps: { min: 0 } }} />
+            <CustomTextField fieldLabel="Quiz/Test per Term" defaultState={2} updateState={setQuizQuantity} fieldType="number" slotProps={{ htmlInput: { min: 0 } }} />
 
-            <CustomTextField fieldLabel="Study Hours per Quiz/Test" defaultState={3} updateState={setStudyLength} fieldType="number" inputProps={{ inputProps: { min: 0 }, endAdornment: "hours" }} collapseContent={<p>Study Hours are added to the asynchronous time total.</p>} />
+            <CustomTextField fieldLabel="Study Hours per Quiz/Test" defaultState={3} updateState={setStudyLength} fieldType="number" slotProps={{ htmlInput: { min: 0 }, input: { endAdornment: <InputAdornment position="end">hours</InputAdornment> } }} collapseContent={<p>Study Hours are added to the asynchronous time total.</p>} />
 
             <CustomTextField fieldLabel="Format" defaultState='sync' updateState={setFormat} collapseContent={
                 <div>
@@ -59,7 +60,7 @@ export default function QuizCalculator(props) {
             />
             {
                 format == "async" ?
-                    <CustomTextField fieldLabel="Duration per Quiz/Test (in minutes)" defaultState={15} updateState={setQuizDuration} fieldType="number" inputProps={{ inputProps: { min: 0 }, endAdornment: "minutes" }} collapseContent={<p>Duration per Quiz/Test (in minutes)</p>} /> : null
+                    <CustomTextField fieldLabel="Duration per Quiz/Test (in minutes)" defaultState={15} updateState={setQuizDuration} fieldType="number" slotProps={{ htmlInput: { min: 0 }, input: { endAdornment: <InputAdornment position="end">minutes</InputAdornment> } }} collapseContent={<p>Duration per Quiz/Test (in minutes)</p>} /> : null
             }
 
         </Fragment>

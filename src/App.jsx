@@ -11,6 +11,7 @@ import FormLabel from '@mui/material/FormLabel';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -157,7 +158,7 @@ const App = () => {
 
     return (
         <ThemeProvider theme={theme}>
-            <Box display="flex" flexDirection="column" minHeight="100vh">
+            <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
                 <AppBar position="static" className="no-print" sx={{ bgcolor: "#003c71", height: '80px', paddingTop: '8px', paddingBottom: '8px' }}>
                     <Toolbar sx={{ width: { xs: 'auto', sm: 'auto', md: 'auto', lg: 'auto', xl: '1487px' }, margin: { xl: '0 auto' }, padding: { xl: '0' } }}>
                         <Box component="img" alt="BCIT logo" src={LOGO_SRC} sx={{ height: '50px', marginRight: '1em', maxHeight: { xs: 50, xl: 50 } }} />
@@ -166,15 +167,15 @@ const App = () => {
                         </Typography>
                     </Toolbar>
                 </AppBar>
-                <Box flexGrow={1}>
+                <Box sx={{ flexGrow: 1 }}>
                     <Container maxWidth="xl">
                         <Grid container spacing={2}>
-                            <Grid item xs={12} sm={5} md={5} lg={4} xl={3} className="no-print">
+                            <Grid size={{ xs: 12, sm: 5, md: 5, lg: 4, xl: 3 }} className="no-print">
                                 <Box sx={boxStyle}>
                                     <FormControl fullWidth className='calculator-text-field'>
                                         <FormLabel>Course Details:</FormLabel>
-                                        <TextField size="small" fullWidth label="Number of scheduled weeks" value={courseDuration} type="number" InputProps={{ inputProps: { min: 0 }, endAdornment: " weeks" }} onChange={handleCourseDurationField} onBlur={handleCourseDurationBlur} />
-                                        <TextField size="small" fullWidth label="Number of credits" value={courseCredits} type="number" InputProps={{ inputProps: { min: 0.5, step: 0.5 } }} onChange={handleCourseCreditsField} onBlur={handleCourseCreditsBlur} />
+                                        <TextField size="small" fullWidth label="Number of scheduled weeks" value={courseDuration} type="number" slotProps={{ htmlInput: { min: 0 }, input: { endAdornment: <InputAdornment position="end">weeks</InputAdornment> } }} onChange={handleCourseDurationField} onBlur={handleCourseDurationBlur} />
+                                        <TextField size="small" fullWidth label="Number of credits" value={courseCredits} type="number" slotProps={{ htmlInput: { min: 0.5, step: 0.5 } }} onChange={handleCourseCreditsField} onBlur={handleCourseCreditsBlur} />
                                     </FormControl>
                                 </Box>
                                 <Box sx={boxStyle}>
@@ -188,7 +189,7 @@ const App = () => {
                                     </FormControl>
                                 </Box>
                             </Grid>
-                            <Grid item xs={12} sm={7} md={7} lg={4} xl={3} className="no-print">
+                            <Grid size={{ xs: 12, sm: 7, md: 7, lg: 4, xl: 3 }} className="no-print">
                                 <Box sx={boxStyle} className="course-components-container" key={"course-activities-" + componentIndex}>
                                     <CustomTextField fieldLabel="Course Activity" defaultState={activityIndex} updateState={handleActivitySelected} collapseContent={activityDesciptions[componentIndex]} selectContent={activities} />
 
@@ -196,7 +197,7 @@ const App = () => {
                                 </Box>
                             </Grid>
 
-                            <Grid item xs={12} sm={12} md={12} lg={4} xl={6}>
+                            <Grid size={{ xs: 12, sm: 12, md: 12, lg: 4, xl: 6 }}>
                                 <Summary duration={courseDuration} summary={summary} updateSummary={updateSummary}></Summary>
                             </Grid>
 
@@ -397,10 +398,10 @@ const App = () => {
                     </Container>
                 </Box>
                 <Grid container spacing={2} id="footer" className="no-print">
-                    <Grid className="cpt-contact" item xs={12} sm={6} md={6} lg={6} xl={6}>
+                    <Grid className="cpt-contact" size={{ xs: 12, sm: 6, md: 6, lg: 6, xl: 6 }}>
                         <p>contact us at <Link href="mailto:courseproduction@bcit.ca?subject=Course-Workload-Estimator%3A%20" target="_blank" rel="noopener noreferrer">courseproduction@bcit.ca</Link></p>
                     </Grid>
-                    <Grid className="ltc-link" item xs={12} sm={6} sx={{ textAlign: { xs: 'left', sm: 'right' } }}>
+                    <Grid className="ltc-link" size={{ xs: 12, sm: 6 }} sx={{ textAlign: { xs: 'left', sm: 'right' } }}>
                         <p>made by <Link href="https://www.bcit.ca/learning-teaching-centre/" target="_blank" rel="noopener noreferrer">BCIT LTC</Link></p>
                     </Grid>
                 </Grid>

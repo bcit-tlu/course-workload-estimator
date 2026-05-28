@@ -11,7 +11,7 @@ export default function CustomTextField(props) {
     const [clicked, setClicked] = React.useState(false);
     const optionalProps = {
         ...(props.fieldType != undefined && { type: props.fieldType }),
-        ...(props.inputProps != undefined && { InputProps: props.inputProps }),
+        ...(props.slotProps != undefined && { slotProps: props.slotProps }),
         ...(props.selectContent != undefined && { select: true }),
 
     };

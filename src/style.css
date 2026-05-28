@@ -39,7 +39,7 @@ span,
     font-weight: 800 !important;
 }
 
-.MuiDataGrid-columnHeaders,
+.MuiDataGrid-columnHeader,
 .MuiTableContainer-root th {
     font-weight: bold;
     background-color: rgb(0 126 255 / 10%);
@@ -135,10 +135,6 @@ legend {
     white-space: normal;
     line-height: 1.2;
     text-align: center;
-}
-
-.MuiDataGrid-cellContent {
-    overflow-wrap: break-word;
 }
 
 .course-activity-container {

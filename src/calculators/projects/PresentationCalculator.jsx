@@ -28,8 +28,8 @@ export default function PresentationCalculator(props) {
     return (
         <Fragment>
             <CustomTextField fieldLabel="Activity Name (Optional)" defaultState={""} updateState={setActivityName} />
-            <CustomTextField fieldLabel="Number of Presentations per Course" defaultState={1} updateState={setPresentationQuantity} fieldType="number" inputProps={{ inputProps: { min: 0 }, endAdornment: (<InputAdornment position="end">/course</InputAdornment>) }} />
-            <CustomTextField fieldLabel="Prep. Time per Presentation (Hrs)" defaultState={1} updateState={setPrepTime} fieldType="number" inputProps={{ inputProps: { min: 0 }, endAdornment: "hours" }} />
+            <CustomTextField fieldLabel="Number of Presentations per Course" defaultState={1} updateState={setPresentationQuantity} fieldType="number" slotProps={{ htmlInput: { min: 0 }, input: { endAdornment: <InputAdornment position="end">/course</InputAdornment> } }} />
+            <CustomTextField fieldLabel="Prep. Time per Presentation (Hrs)" defaultState={1} updateState={setPrepTime} fieldType="number" slotProps={{ htmlInput: { min: 0 }, input: { endAdornment: <InputAdornment position="end">hours</InputAdornment> } }} />
         </Fragment>
     );
 }

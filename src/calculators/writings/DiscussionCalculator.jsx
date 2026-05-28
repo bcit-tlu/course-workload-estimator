@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react';
 import CustomTextField from '../../helpers/CustomTextField';
 import CustomCheckBox from '../../helpers/CustomCheckBox';
 import FormGroup from '@mui/material/FormGroup';
+import InputAdornment from '@mui/material/InputAdornment';
 
 export default function DiscussionCalculator(props) {
     const [activityName, setActivityName] = useState("");
@@ -48,17 +49,17 @@ export default function DiscussionCalculator(props) {
     return (
         <Fragment>
             <CustomTextField fieldLabel="Discussion Name (Optional)" defaultState={""} updateState={setActivityName} />
-            <CustomTextField fieldLabel="Number of Discussions per Course" defaultState={1} updateState={setDiscussionQuantity} fieldType="number" inputProps={{ inputProps: { min: 0 } }} collapseContent={<p>Add how many discussions you have scheduled in your course where students are expected to participate.</p>} />
-            <CustomTextField fieldLabel="Original Posts" defaultState={1} updateState={setPostQuantity} fieldType="number" inputProps={{ inputProps: { min: 0 }, endAdornment: "posts" }} collapseContent={<p>Add how many posted contributions you expect students to make, where they have to research and reflect to create their own contribution.</p>} />
-            <CustomTextField fieldLabel="Average Post Length (words)" defaultState={200} updateState={setAvgPostLength} fieldType="number" inputProps={{ inputProps: { min: 0 }, endAdornment: "words" }} collapseContent={<p>By default, the calculation for the Average Post Length is based on an estimate of 250 words per hour.</p>} />
-            <CustomTextField fieldLabel="Responses" defaultState={1} updateState={setResponseQuantity} fieldType="number" inputProps={{ inputProps: { min: 0 }, endAdornment: "responses" }} />
-            <CustomTextField fieldLabel="Average Response Length (words)" defaultState={100} updateState={setAvgResponseLength} fieldType="number" inputProps={{ inputProps: { min: 0 }, endAdornment: "words" }} collapseContent={<p>By default, the calculation for the Average Response Length is based on an estimate of 125 words per half hour.</p>} />
+            <CustomTextField fieldLabel="Number of Discussions per Course" defaultState={1} updateState={setDiscussionQuantity} fieldType="number" slotProps={{ htmlInput: { min: 0 } }} collapseContent={<p>Add how many discussions you have scheduled in your course where students are expected to participate.</p>} />
+            <CustomTextField fieldLabel="Original Posts" defaultState={1} updateState={setPostQuantity} fieldType="number" slotProps={{ htmlInput: { min: 0 }, input: { endAdornment: <InputAdornment position="end">posts</InputAdornment> } }} collapseContent={<p>Add how many posted contributions you expect students to make, where they have to research and reflect to create their own contribution.</p>} />
+            <CustomTextField fieldLabel="Average Post Length (words)" defaultState={200} updateState={setAvgPostLength} fieldType="number" slotProps={{ htmlInput: { min: 0 }, input: { endAdornment: <InputAdornment position="end">words</InputAdornment> } }} collapseContent={<p>By default, the calculation for the Average Post Length is based on an estimate of 250 words per hour.</p>} />
+            <CustomTextField fieldLabel="Responses" defaultState={1} updateState={setResponseQuantity} fieldType="number" slotProps={{ htmlInput: { min: 0 }, input: { endAdornment: <InputAdornment position="end">responses</InputAdornment> } }} />
+            <CustomTextField fieldLabel="Average Response Length (words)" defaultState={100} updateState={setAvgResponseLength} fieldType="number" slotProps={{ htmlInput: { min: 0 }, input: { endAdornment: <InputAdornment position="end">words</InputAdornment> } }} collapseContent={<p>By default, the calculation for the Average Response Length is based on an estimate of 125 words per half hour.</p>} />
 
             <FormGroup className='form-group-toggle'>
                 <CustomCheckBox checkboxLabel="Adjust Manually" defaultState={false} updateState={setManualAdjust} />
                 {
                     manualAdjust &&
-                    <CustomTextField fieldLabel="Hours per discussion" defaultState={1} updateState={SetManualDiscussionPerHour} fieldType="number" inputProps={{ inputProps: { min: 0 }, endAdornment: "hour/discussion" }} />
+                    <CustomTextField fieldLabel="Hours per discussion" defaultState={1} updateState={SetManualDiscussionPerHour} fieldType="number" slotProps={{ htmlInput: { min: 0 }, input: { endAdornment: <InputAdornment position="end">hour/discussion</InputAdornment> } }} />
                 }
             </FormGroup>
         </Fragment>
