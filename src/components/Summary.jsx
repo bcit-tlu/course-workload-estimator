@@ -229,7 +229,7 @@ export default function Summary(props) {
                     display: 'flex',
                     alignItems: 'center',
                 },
-                '& .MuiDataGrid-row:nth-of-type(odd)': {
+                '& .MuiDataGrid-row:nth-of-type(even)': {
                     backgroundColor: 'rgb(0 126 255 / 5%)',
                 },
                 '@media print': {
