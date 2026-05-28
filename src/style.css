@@ -39,7 +39,10 @@ span,
     font-weight: 800 !important;
 }
 
-.MuiDataGrid-columnHeader,
+.MuiDataGrid-columnHeader {
+    font-weight: bold;
+}
+
 .MuiTableContainer-root th {
     font-weight: bold;
     background-color: rgb(0 126 255 / 10%);

@@ -222,6 +222,13 @@ export default function Summary(props) {
                     lineHeight: 1,
                     textAlign: "center"
                 },
+                '& .MuiDataGrid-columnHeader, & .MuiDataGrid-filler > div, & .MuiDataGrid-scrollbarFiller': {
+                    backgroundColor: 'rgb(231, 240, 255)',
+                },
+                '& .MuiDataGrid-cell': {
+                    display: 'flex',
+                    alignItems: 'center',
+                },
                 '& .MuiDataGrid-row:nth-of-type(odd)': {
                     backgroundColor: 'rgb(0 126 255 / 5%)',
                 },
