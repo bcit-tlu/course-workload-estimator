@@ -60,19 +60,19 @@ export default function Summary(props) {
             { field: 'Activity Name', headerName: 'Activity Name', headerAlign: 'center', flex: 2 },
             {
                 field: 'hours/week (S)', headerName: 'hours /week (S)', renderHeader: () => (<span className='summary-table-header'>hours<wbr />/week (S)</span>), headerAlign: 'center', align: 'center', flex: 1,
-                valueGetter: (params) => { return params.value; }, valueFormatter: (params) => { return formatTime(params.value); }
+                valueFormatter: (value) => formatTime(value)
             },
             {
                 field: 'hours/term (S)', headerName: 'hours /term (S)', renderHeader: () => (<span className='summary-table-header'>hours<wbr />/term (S)</span>), headerAlign: 'center', align: 'center', flex: 1,
-                valueGetter: (params) => { return params.value; }, valueFormatter: (params) => { return formatTime(params.value); }
+                valueFormatter: (value) => formatTime(value)
             },
             {
                 field: 'hours/week (A)', headerName: 'hours /week (A)', renderHeader: () => (<span className='summary-table-header'>hours<wbr />/week (A)</span>), headerAlign: 'center', align: 'center', flex: 1,
-                valueGetter: (params) => { return params.value; }, valueFormatter: (params) => { return formatTime(params.value); }
+                valueFormatter: (value) => formatTime(value)
             },
             {
                 field: 'hours/term (A)', headerName: 'hours /term (A)', renderHeader: () => (<span className='summary-table-header'>hours<wbr />/term (A)</span>), headerAlign: 'center', align: 'center', flex: 1,
-                valueGetter: (params) => { return params.value; }, valueFormatter: (params) => { return formatTime(params.value); }
+                valueFormatter: (value) => formatTime(value)
             },
             {
                 field: 'actions', type: 'actions', headerAlign: 'center', align: 'center', flex: 0.5,
@@ -221,7 +221,18 @@ export default function Summary(props) {
                     whiteSpace: "normal",
                     lineHeight: 1,
                     textAlign: "center"
-                }, '@media print': {
+                },
+                '& .MuiDataGrid-columnHeader, & .MuiDataGrid-filler > div, & .MuiDataGrid-scrollbarFiller': {
+                    backgroundColor: 'rgb(231, 240, 255)',
+                },
+                '& .MuiDataGrid-cell': {
+                    display: 'flex',
+                    alignItems: 'center',
+                },
+                '& .MuiDataGrid-row:nth-of-type(even)': {
+                    backgroundColor: 'rgb(0 126 255 / 5%)',
+                },
+                '@media print': {
                     '.MuiDataGrid-main': { width: '100%' },
                 },
                 '.MuiDataGrid-main': {
@@ -255,7 +266,7 @@ export default function Summary(props) {
             {
                 jsonSummary.length ?
                     <Fragment>
-                        <Box textAlign='right' className='no-print'>
+                        <Box className='no-print' sx={{ textAlign: 'right' }}>
                             <Button variant="outlined" color="error" size="small" sx={{ textTransform: "none" }} onClick={() => { localStorage.removeItem('bcitcourseworkloadestimator'); props.updateSummary(null); trackEvent('summary_cleared'); }}>clear all</Button>
                         </Box>
                         <Box sx={boxStyle}>
@@ -324,7 +335,7 @@ export default function Summary(props) {
 
                     </Fragment> : null
             }
-            <Box className='no-print' textAlign='center'>
+            <Box className='no-print' sx={{ textAlign: 'center' }}>
                 <UploadCsv updateSummary={props.updateSummary} />
                 {
                     jsonSummary.length ?

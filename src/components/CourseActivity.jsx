@@ -113,7 +113,7 @@ export default function CourseActivity(props) {
     return (
         <Box className='course-activity-container' key={"form-group-" + props.componentIndex + "-" + props.activityIndex}>
             <FormGroup className='calculator-text-field'>{renderCalculator()}</FormGroup>
-            <Box textAlign='center'>
+            <Box sx={{ textAlign: 'center' }}>
                 <Button variant="contained" size="large" onClick={addActivity}>Add Activity</Button>
             </Box>
         </Box>

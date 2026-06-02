@@ -1,5 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import CustomTextField from '../../helpers/CustomTextField';
+import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import Radio from '@mui/material/Radio';
@@ -60,9 +61,9 @@ export default function ExamCalculator(props) {
     return (
         <Fragment>
             <CustomTextField fieldLabel="Exam Name (Optional)" defaultState="" updateState={setActivityName} />
-            <CustomTextField fieldLabel="Exam per Term" defaultState={2} updateState={setExamQuantity} fieldType="number" inputProps={{ inputProps: { min: 0 } }} />
-            <CustomTextField fieldLabel="Duration per Exam (Hours)" defaultState={2} updateState={setExamDuration} fieldType="number" inputProps={{ inputProps: { min: 0 }, endAdornment: "hours" }} />
-            <CustomTextField fieldLabel="Study Hours per Exam" defaultState={3} updateState={setStudyLength} fieldType="number" inputProps={{ inputProps: { min: 0 }, endAdornment: "hours" }} collapseContent={<p>Study Hours are added to the asynchronous time total.</p>} />
+            <CustomTextField fieldLabel="Exam per Term" defaultState={2} updateState={setExamQuantity} fieldType="number" slotProps={{ htmlInput: { min: 0 } }} />
+            <CustomTextField fieldLabel="Duration per Exam (Hours)" defaultState={2} updateState={setExamDuration} fieldType="number" slotProps={{ htmlInput: { min: 0 }, input: { endAdornment: <InputAdornment position="end">hours</InputAdornment> } }} />
+            <CustomTextField fieldLabel="Study Hours per Exam" defaultState={3} updateState={setStudyLength} fieldType="number" slotProps={{ htmlInput: { min: 0 }, input: { endAdornment: <InputAdornment position="end">hours</InputAdornment> } }} collapseContent={<p>Study Hours are added to the asynchronous time total.</p>} />
             <CustomTextField fieldLabel="Format" defaultState='sync' updateState={setFormat} collapseContent={
                 <div>
                     <p>Synchronous Format means that the time for the Exam is already accounted for in the Scheduled Synchronous Meeting Time and no further time will be added unless it is scheduled outside of the term weeks. Selecting Synchronous Exam will add Preparation Time to asynchronous time totals.</p>

@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react';
 import CustomTextField from '../../helpers/CustomTextField';
 import CustomCheckBox from '../../helpers/CustomCheckBox';
 import FormGroup from '@mui/material/FormGroup';
+import InputAdornment from '@mui/material/InputAdornment';
 
 export default function ProjectCalculator(props) {
     const [activityName, setActivityName] = useState("");
@@ -46,7 +47,7 @@ export default function ProjectCalculator(props) {
     return (
         <Fragment>
             <CustomTextField fieldLabel="Project Name (Optional)" defaultState={""} updateState={setActivityName} />
-            <CustomTextField fieldLabel="Number of Weeks per Project" defaultState={1} updateState={setWeeksPerProject} fieldType="number" inputProps={{ inputProps: { min: 0 }, endAdornment: "weeks" }} />
+            <CustomTextField fieldLabel="Number of Weeks per Project" defaultState={1} updateState={setWeeksPerProject} fieldType="number" slotProps={{ htmlInput: { min: 0 }, input: { endAdornment: <InputAdornment position="end">weeks</InputAdornment> } }} />
             <CustomTextField fieldLabel="Project Size" defaultState={2} updateState={setProjectSize} selectContent={[
                 { value: 2, text: 'Small' },
                 { value: 7, text: 'Medium' },
@@ -56,7 +57,7 @@ export default function ProjectCalculator(props) {
                 <CustomCheckBox checkboxLabel="Adjust Manually" defaultState={false} updateState={setManualAdjust} />
                 {
                     manualAdjust &&
-                    <CustomTextField fieldLabel="Hours per Week" defaultState={1} updateState={setManualPagesPerHour} fieldType="number" inputProps={{ inputProps: { min: 0 }, endAdornment: "hours/week" }} />
+                    <CustomTextField fieldLabel="Hours per Week" defaultState={1} updateState={setManualPagesPerHour} fieldType="number" slotProps={{ htmlInput: { min: 0 }, input: { endAdornment: <InputAdornment position="end">hours/week</InputAdornment> } }} />
                 }
             </FormGroup>
             <CustomCheckBox checkboxLabel="Synchronous Time" defaultState={false} updateState={setSynchronous} collapseContent={<p>Checking Synchronous Time means that the Reading & Watching Activity is part of scheduled Synchronous Meeting Time (e.g. an in-class activity) and will be calculated with the synchronous time instead of the asynchronous time.</p>} />

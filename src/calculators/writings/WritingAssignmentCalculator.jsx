@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react';
 import CustomTextField from '../../helpers/CustomTextField';
 import CustomCheckBox from '../../helpers/CustomCheckBox';
 import FormGroup from '@mui/material/FormGroup';
+import InputAdornment from '@mui/material/InputAdornment';
 
 export default function WritingAssignmentCalculator(props) {
     const [activityName, setActivityName] = useState("");
@@ -89,8 +90,8 @@ export default function WritingAssignmentCalculator(props) {
     return (
         <Fragment>
             <CustomTextField fieldLabel="Assignment Name (Optional)" defaultState={""} updateState={setActivityName} />
-            <CustomTextField fieldLabel="Number of Assignment" defaultState={1} updateState={setAssigmentQuantity} fieldType="number" inputProps={{ inputProps: { min: 0 } }} />
-            <CustomTextField fieldLabel="Pages per Assignment" defaultState={1} updateState={setAssignmentPages} fieldType="number" inputProps={{ inputProps: { min: 0 }, endAdornment: "pages" }} />
+            <CustomTextField fieldLabel="Number of Assignment" defaultState={1} updateState={setAssigmentQuantity} fieldType="number" slotProps={{ htmlInput: { min: 0 } }} />
+            <CustomTextField fieldLabel="Pages per Assignment" defaultState={1} updateState={setAssignmentPages} fieldType="number" slotProps={{ htmlInput: { min: 0 }, input: { endAdornment: <InputAdornment position="end">pages</InputAdornment> } }} />
             <CustomTextField fieldLabel="Pages Density" defaultState='250' updateState={setPagesDensity} selectContent={[
                 { value: '250', text: '250 words' },
                 { value: '500', text: '500 words' }
@@ -110,7 +111,7 @@ export default function WritingAssignmentCalculator(props) {
                 <CustomCheckBox checkboxLabel="Adjust Manually" defaultState={false} updateState={setManualAdjust} />
                 {
                     manualAdjust &&
-                    <CustomTextField fieldLabel="Pages Read per Hour" defaultState={1} updateState={setManualPagesPerHour} fieldType="number" inputProps={{ inputProps: { min: 0 }, endAdornment: "pages/hour" }} />
+                    <CustomTextField fieldLabel="Pages Read per Hour" defaultState={1} updateState={setManualPagesPerHour} fieldType="number" slotProps={{ htmlInput: { min: 0 }, input: { endAdornment: <InputAdornment position="end">pages/hour</InputAdornment> } }} />
                 }
             </FormGroup>
             <CustomCheckBox checkboxLabel="Synchronous Time" defaultState={false} updateState={setSynchronous} collapseContent={<p>Checking Synchronous Time means that the Reading & Watching Activity is part of scheduled Synchronous Meeting Time (e.g. an in-class activity) and will be calculated with the synchronous time instead of the asynchronous time.</p>} />

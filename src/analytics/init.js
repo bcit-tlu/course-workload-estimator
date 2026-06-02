@@ -54,6 +54,7 @@ export function initAnalytics() {
 export function logEvent(eventName, attributes = {}) {
   try {
     const logger = logs.getLogger('analytics');
+    // console.log('[analytics]', eventName, attributes);
     logger.emit({
       body: eventName,
       severityNumber: SeverityNumber.INFO,
