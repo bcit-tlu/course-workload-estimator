@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.1](https://github.com/bcit-tlu/course-workload-estimator/compare/v1.4.0...v1.4.1) (2026-06-02)
+
+
+### Bug Fixes
+
+* upgrade to React 19 and Material-UI 9 ([#27](https://github.com/bcit-tlu/course-workload-estimator/issues/27)) ([9b691d0](https://github.com/bcit-tlu/course-workload-estimator/commit/9b691d0eea7ba376c40eb2dfacdd503236996cc3))
+
 ## [1.4.0](https://github.com/bcit-tlu/course-workload-estimator/compare/v1.3.0...v1.4.0) (2026-05-26)
 
 
