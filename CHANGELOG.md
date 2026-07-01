@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.2](https://github.com/bcit-tlu/course-workload-estimator/compare/v1.4.1...v1.4.2) (2026-07-01)
+
+
+### Bug Fixes
+
+* **ci:** drop setup-buildx-action from release-retag job ([#38](https://github.com/bcit-tlu/course-workload-estimator/issues/38)) ([c8f72d4](https://github.com/bcit-tlu/course-workload-estimator/commit/c8f72d48339fd68bc4a87b162c2c132c670952f2))
+
 ## [1.4.1](https://github.com/bcit-tlu/course-workload-estimator/compare/v1.4.0...v1.4.1) (2026-06-02)
 
 
