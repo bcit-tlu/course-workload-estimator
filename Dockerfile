@@ -1,5 +1,5 @@
 # Build stage
-FROM node:24.16.0-alpine3.22 AS builder
+FROM node:24.19.0-alpine3.24 AS builder
 
 WORKDIR /app
 
@@ -13,7 +13,7 @@ RUN npm run build
 
 
 # Release/production
-FROM nginxinc/nginx-unprivileged:alpine3.22-perl
+FROM nginxinc/nginx-unprivileged:alpine3.24-perl
 
 LABEL maintainer=courseproduction@bcit.ca
 LABEL org.opencontainers.image.source="https://github.com/bcit-tlu/course-workload-estimator"

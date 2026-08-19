@@ -1,3 +1,4 @@
+process.env.NODE_ENV = 'development';
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
@@ -10,6 +11,7 @@ module.exports = {
     },
     target: 'web',
     devServer: {
+        host: '0.0.0.0',
         port: '3000',
         static: {
             directory: path.join(__dirname, 'public')

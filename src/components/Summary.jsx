@@ -52,6 +52,17 @@ export default function Summary(props) {
         return formattedTime;
     };
 
+    const deleteUser = useCallback(
+        (id) => () => {
+            setTimeout(() => {
+                let newSummary = JSON.parse(localStorage.getItem('bcitcourseworkloadestimator'));
+                newSummary.splice(id - 1, 1);
+                props.updateSummary(JSON.stringify(newSummary));
+            });
+        },
+        [],
+    );
+
     const columns = useMemo(
         () => [
             { field: 'id', headerName: '#', headerAlign: 'center', align: 'center', flex: 0.5 },
@@ -161,17 +172,6 @@ export default function Summary(props) {
     totalWeeklyHours = totalAWeekly + totalSWeekly;
     totalTermHours = totalATerm + totalSTerm;
 
-
-    const deleteUser = useCallback(
-        (id) => () => {
-            setTimeout(() => {
-                let newSummary = JSON.parse(localStorage.getItem('bcitcourseworkloadestimator'));
-                newSummary.splice(id - 1, 1);
-                props.updateSummary(JSON.stringify(newSummary));
-            });
-        },
-        [],
-    );
 
     let renderLabel = function (entry) {
         return `${roundNumber(entry.value / totalTermHours * 100)}%`;
