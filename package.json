@@ -38,7 +38,7 @@
     "@mui/material": "^9.3.1",
     "@mui/x-data-grid": "^9.11.0",
     "@opentelemetry/api-logs": "^0.221.0",
-    "@opentelemetry/browser-instrumentation": "^0.7.0",
+    "@opentelemetry/browser-instrumentation": "^0.8.0",
     "@opentelemetry/exporter-logs-otlp-http": "^0.221.0",
     "@opentelemetry/instrumentation": "^0.221.0",
     "@opentelemetry/resources": "^2.10.0",
