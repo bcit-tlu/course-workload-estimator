@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.4](https://github.com/bcit-tlu/course-workload-estimator/compare/v1.4.3...v1.4.4) (2026-09-16)
+
+
+### Bug Fixes
+
+* support unquoted HTML attributes in CDN rewrite regex ([9ab9506](https://github.com/bcit-tlu/course-workload-estimator/commit/9ab950694d70b83259520a2d0961b7a2961fbf8c))
+
 ## [1.4.3](https://github.com/bcit-tlu/course-workload-estimator/compare/v1.4.2...v1.4.3) (2026-09-16)
 
 
