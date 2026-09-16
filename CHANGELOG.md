@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.3](https://github.com/bcit-tlu/course-workload-estimator/compare/v1.4.2...v1.4.3) (2026-09-16)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([#53](https://github.com/bcit-tlu/course-workload-estimator/issues/53)) ([cddafdc](https://github.com/bcit-tlu/course-workload-estimator/commit/cddafdc7224e9fb9e60bccbe5fc4c31a18a4aafa))
+
 ## [1.4.2](https://github.com/bcit-tlu/course-workload-estimator/compare/v1.4.1...v1.4.2) (2026-07-01)
 
 
