@@ -7,6 +7,7 @@
 - Start development server: `npm start`
 - Helm lint: `helm lint charts/`
 - Helm validate: `helm template test charts/ | kubeconform -strict -summary -schema-location default -ignore-missing-schemas`
+- Verify CDN rewrite initContainer: `bash tests/helm-cdn-rewrite.sh` (needs helm + yq)
 
 ## Code Style
 
@@ -46,3 +47,7 @@
 - Deployed to Kubernetes via Flux CD (see `bcit-tlu/flux-fleet`)
 - Ingress: `course-workload-estimator.<CLUSTER_ENV>.ltc.bcit.ca`
 - Static site served by nginx-unprivileged on port 8080
+
+### Container/runtime
+
+- `experiments.html: false` is set in `webpack.dev.js`/`webpack.prod.js` because webpack >=5.109's built-in HTML modules re-minify html-webpack-plugin output and drop attribute quotes, which breaks the CDN rewrite.

@@ -12,6 +12,8 @@ module.exports = {
         filename: '[name]_bundle.js',
         clean: true,
     },
+    // webpack >=5.109 enables built-in HTML modules by default; they re-minify html-webpack-plugin output (drop attribute quotes), which breaks the CDN rewrite.
+    experiments: { html: false },
     resolve: {
         extensions: ['.js', '.jsx', '.json'],
     },
