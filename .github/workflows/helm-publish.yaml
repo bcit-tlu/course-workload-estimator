@@ -9,6 +9,11 @@ on:
         description: "Release tag to package and publish (e.g. v1.2.3)"
         required: true
         type: string
+      content_ref:
+        description: "CDN content ref to promote directly, skipping the .by-commit/<sha> lookup (recovery escape hatch — leave empty normally)."
+        required: false
+        type: string
+        default: ""
 
 env:
   ASSET_EXTENSIONS: "css,js,map,jpg,jpeg,png,webp,gif,svg,ico,mp4,woff,woff2,ttf,otf,eot"
@@ -19,10 +24,44 @@ permissions:
   id-token: write
 
 jobs:
-  # Package, push, and sign the Helm chart for a release tag. The shared
-  # workflow parses the tag, checks out the matching ref, and injects the
-  # short commit SHA into values.yaml for CDN immutable paths.
+  # Resolve the release tag's commit to the content ref its latest-channel build produced (.by-commit/<sha>), then server-side copy that prefix from the latest account to the stable account — no rebuild, no re-upload.
+  # Runs under the 'stable' environment: that UAMI can read the repo's latest container and write its stable container.
+  cdn-promote:
+    runs-on: ubuntu-latest
+    environment: stable
+    permissions:
+      contents: read
+      id-token: write
+    outputs:
+      content_ref: ${{ steps.promote.outputs.content_ref }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.tag_name || github.event.release.tag_name }}
+          persist-credentials: false
+
+      - id: tag-sha
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID_STABLE }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - id: promote
+        uses: bcit-tlu/.github/.github/actions/cdn-promote@main
+        with:
+          latest_account: ${{ vars.CDN_ACCOUNT_NAME_LATEST }}
+          stable_account: ${{ vars.CDN_ACCOUNT_NAME_STABLE }}
+          repo_name: ${{ github.event.repository.name }}
+          commit_sha: ${{ steps.tag-sha.outputs.sha }}
+          content_ref: ${{ inputs.content_ref }}
+
+  # Package, push, and sign the Helm chart for a release tag. The shared workflow parses the tag, checks out the matching ref, and injects the promoted content ref into values.yaml for CDN immutable paths.
   publish:
+    needs: cdn-promote
     uses: bcit-tlu/.github/.github/workflows/helm-publish.yaml@main
     permissions:
       contents: read
@@ -32,45 +71,12 @@ jobs:
       chart_dir: charts
       tag_name: ${{ inputs.tag_name || github.event.release.tag_name }}
       ref: ${{ inputs.tag_name || github.event.release.tag_name }}
-      inject_cdn_sha: true
+      cdn_content_ref: ${{ needs.cdn-promote.outputs.content_ref }}
     secrets: inherit
 
-  # Rebuild dist at the release tag and rewrite asset URLs for the STABLE endpoint. Assets cannot be copied from the latest account: the endpoint hostname is baked into the rewritten URLs, and the stable credential has no access to the latest account. Emits the release's short SHA.
-  build-stable-assets:
-    uses: bcit-tlu/.github/.github/workflows/cdn-build-assets.yaml@main
-    permissions:
-      contents: read
-    with:
-      ref: ${{ inputs.tag_name || github.event.release.tag_name }}
-      repo_name: ${{ github.event.repository.name }}
-      cdn_base_url: ${{ vars.CDN_BASE_URL_STABLE }}
-      artifact_name: dist-stable
-      asset_extensions: ${{ env.ASSET_EXTENSIONS }}
-
-  # Upload the rewritten dist/ artifacts to the stable CDN account under the release SHA prefix. Authenticates via OIDC (UAMI) scoped to the course-workload-estimator stable container; the 'stable' GitHub Environment is what Azure trusts.
-  cdn-upload-stable:
-    needs: build-stable-assets
-    uses: bcit-tlu/.github/.github/workflows/cdn-upload.yaml@main
-    permissions:
-      contents: read
-      id-token: write
-    with:
-      dist_dir: "dist"
-      artifact_name: "dist-stable"
-      destination_prefix: ${{ needs.build-stable-assets.outputs.destination_prefix }}
-      cdn_account_name: ${{ vars.CDN_ACCOUNT_NAME_STABLE }}
-      repo_name: ${{ github.event.repository.name }}
-      asset_extensions: ${{ env.ASSET_EXTENSIONS }}
-      auth_mode: oidc
-      environment: stable
-    secrets:
-      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID_STABLE }}
-      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-  # Record this release's SHA as a stable CDN asset set, keeping the last N. Runs only after the stable upload so the pointer never references missing assets. OIDC auth via azure/login; the action falls back to --auth-mode login.
+  # Record this release's content ref as a stable CDN asset set, keeping the last N. Runs only after the promotion copy so the pointer never references missing assets. OIDC auth via azure/login; the action falls back to --auth-mode login.
   update-stable-history:
-    needs: [publish, build-stable-assets, cdn-upload-stable]
+    needs: [publish, cdn-promote]
     runs-on: ubuntu-latest
     environment: stable
     permissions:
@@ -88,11 +94,11 @@ jobs:
         with:
           cdn_account_name: ${{ vars.CDN_ACCOUNT_NAME_STABLE }}
           repo_name: ${{ github.event.repository.name }}
-          stable_sha: ${{ needs.build-stable-assets.outputs.short_sha }}
+          stable_ref: ${{ needs.cdn-promote.outputs.content_ref }}
 
-  # Remove old SHA prefixes from the stable container. Protected SHAs are tracked in .stable-current and .stable-history. Same OIDC auth as upload.
+  # Remove old ref prefixes from the stable container. Protected refs are tracked in .stable-current and .stable-history. Same OIDC auth as promote.
   cdn-cleanup-stable:
-    needs: [build-stable-assets, update-stable-history]
+    needs: [cdn-promote, update-stable-history]
     runs-on: ubuntu-latest
     environment: stable
     permissions:
@@ -110,5 +116,7 @@ jobs:
         with:
           cdn_account_name: ${{ vars.CDN_ACCOUNT_NAME_STABLE }}
           channel: stable
+          # Must match the stable account's immutability_policy_days in infra-azure (ref younger than 90d cannot be deleted).
+          immutable_days: 90
           repo_name: ${{ github.event.repository.name }}
-          sha: ${{ needs.build-stable-assets.outputs.short_sha }}
+          ref: ${{ needs.cdn-promote.outputs.content_ref }}

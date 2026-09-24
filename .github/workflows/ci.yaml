@@ -20,8 +20,7 @@ permissions:
   contents: read
 
 jobs:
-  # Chart quality gate: lint, render, and (optionally) schema-validate the
-  # Helm chart using the shared reusable workflow.
+  # Chart quality gate: lint, render, and (optionally) schema-validate the Helm chart using the shared reusable workflow.
   helm-lint:
     uses: bcit-tlu/.github/.github/workflows/helm-lint.yaml@main
     permissions:
@@ -30,8 +29,7 @@ jobs:
       chart_glob: "charts/"
       extra_command: bash tests/helm-cdn-rewrite.sh
 
-  # Build, sign, scan, and publish the OCI image using the shared reusable
-  # workflow; also outputs an RC version for the chart publish step.
+  # Build, sign, scan, and publish the OCI image using the shared reusable workflow; also outputs an RC version for the chart publish step.
   build-course-workload-estimator:
     uses: bcit-tlu/.github/.github/workflows/oci-build.yaml@main
     permissions:
@@ -47,7 +45,7 @@ jobs:
       tag_prefix: "v"
     secrets: inherit
 
-  # Build the static site and rewrite asset URLs for the CDN upload (latest channel). The Docker build happens separately in the build-course-workload-estimator job.
+  # Build the static site, verify dist/ is host-agnostic, and hash the uploaded file set into a content ref (latest channel). The Docker build happens separately in the build-course-workload-estimator job.
   build-assets:
     if: github.event_name != 'pull_request'
     uses: bcit-tlu/.github/.github/workflows/cdn-build-assets.yaml@main
@@ -58,7 +56,7 @@ jobs:
       cdn_base_url: ${{ vars.CDN_BASE_URL_LATEST }}
       asset_extensions: ${{ env.ASSET_EXTENSIONS }}
 
-  # Upload the rewritten dist/ artifacts to the latest CDN account under the short-SHA prefix. Authenticates to Azure via OIDC (UAMI) — no SAS token. The 'latest' GitHub Environment is what the Azure federated credential trusts; without it the OIDC subject won't match and login will fail.
+  # Upload dist/ verbatim to the latest CDN account under the content-hash prefix and write the .by-commit/<sha> lookup for release-time promotion. Authenticates to Azure via OIDC (UAMI) — no SAS token. The 'latest' GitHub Environment is what the Azure federated credential trusts; without it the OIDC subject won't match and login will fail.
   cdn-upload:
     needs: build-assets
     uses: bcit-tlu/.github/.github/workflows/cdn-upload.yaml@main
@@ -69,9 +67,10 @@ jobs:
       dist_dir: "dist"
       artifact_name: "dist"
       destination_prefix: ${{ needs.build-assets.outputs.destination_prefix }}
+      commit_sha: ${{ needs.build-assets.outputs.commit_sha }}
       cdn_account_name: ${{ vars.CDN_ACCOUNT_NAME_LATEST }}
       repo_name: ${{ github.event.repository.name }}
-      asset_extensions: ${{ env.ASSET_EXTENSIONS }}
+      asset_extensions: ${{ needs.build-assets.outputs.asset_extensions }}
       auth_mode: oidc
       environment: latest
     secrets:
@@ -79,7 +78,7 @@ jobs:
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-  # Remove old CDN SHA prefixes from the latest container. Protected SHAs are tracked in .latest-current and .latest-history. Same OIDC auth as upload.
+  # Remove old CDN ref prefixes from the latest container. Protected refs are tracked in .latest-current and .latest-history. Same OIDC auth as upload.
   cdn-cleanup:
     needs: [cdn-upload, build-assets]
     if: github.event_name != 'pull_request'
@@ -101,12 +100,11 @@ jobs:
           cdn_account_name: ${{ vars.CDN_ACCOUNT_NAME_LATEST }}
           channel: latest
           repo_name: ${{ github.event.repository.name }}
-          sha: ${{ needs.build-assets.outputs.short_sha }}
+          ref: ${{ needs.build-assets.outputs.content_hash }}
 
-  # Package and push the Helm chart for the matching RC image. Runs on main
-  # pushes only; version comes from the oci-build reusable workflow.
+  # Package and push the Helm chart for the matching RC image. Runs on main pushes only; version comes from the oci-build reusable workflow.
   helm-publish:
-    needs: [helm-lint, build-course-workload-estimator, cdn-upload]
+    needs: [helm-lint, build-course-workload-estimator, build-assets, cdn-upload]
     if: >-
       github.event_name != 'pull_request'
       && needs.build-course-workload-estimator.outputs.rc_version != ''
@@ -118,5 +116,5 @@ jobs:
     with:
       chart_dir: charts
       version: ${{ needs.build-course-workload-estimator.outputs.rc_version }}
-      inject_cdn_sha: true
+      cdn_content_ref: ${{ needs.build-assets.outputs.content_hash }}
     secrets: inherit

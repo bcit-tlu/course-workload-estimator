@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
-# Verify the cdn-rewrite initContainer renders an immutable CDN URL and that
-# misconfiguration fails fast, so a broken rewrite blocks the rollout instead
-# of deploying hash-less asset URLs.
+# Verify the cdn-rewrite initContainer renders an immutable CDN URL and that misconfiguration fails fast, so a broken rewrite blocks the rollout instead of deploying hash-less asset URLs.
 set -euo pipefail
 
 CHART_DIR="${CHART_DIR:-charts}"
@@ -25,7 +23,7 @@ fi
 out="$(helm template t "${CHART_DIR}" \
   --set cdn.enabled=true \
   --set cdn.baseUrl=https://cdn.example \
-  --set cdn.commitSha=abc1234 \
+  --set cdn.contentRef=abc1234 \
   --set 'cdn.assetExtensions={css,js}')"
 
 check() {
@@ -37,46 +35,42 @@ check() {
 }
 check 'name: cdn-rewrite'
 check 'CDN_BASE_URL="https://cdn.example"'
-check 'CDN_SHA="abc1234"'
-check 'CDN_URL="${CDN_BASE_URL}/course-workload-estimator/${CDN_SHA}"'
+check 'CDN_REF="abc1234"'
+check 'CDN_URL="${CDN_BASE_URL}/course-workload-estimator/${CDN_REF}"'
 check 'rewrite did not inject'
 
-# 3. Enabled but missing commitSha must fail render (required guard).
+# 3. Enabled but missing contentRef must fail render (required guard).
 if helm template t "${CHART_DIR}" \
   --set cdn.enabled=true \
   --set cdn.baseUrl=https://cdn.example \
   --set 'cdn.assetExtensions={css,js}' >/dev/null 2>&1; then
-  err "missing cdn.commitSha should fail render"
+  err "missing cdn.contentRef should fail render"
 else
-  pass "missing cdn.commitSha fails render"
+  pass "missing cdn.contentRef fails render"
 fi
 
 # 4. Enabled but missing baseUrl must fail render (required guard).
 if helm template t "${CHART_DIR}" \
   --set cdn.enabled=true \
-  --set cdn.commitSha=abc1234 \
+  --set cdn.contentRef=abc1234 \
   --set 'cdn.assetExtensions={css,js}' >/dev/null 2>&1; then
   err "missing cdn.baseUrl should fail render"
 else
   pass "missing cdn.baseUrl fails render"
 fi
 
-# 5. Enabled with a schemeless baseUrl must fail render (scheme guard — a
-# schemeless scheme+host gets treated as a relative URL by browsers and
-# corrupts asset paths).
+# 5. Enabled with a schemeless baseUrl must fail render (scheme guard — a schemeless scheme+host gets treated as a relative URL by browsers and corrupts asset paths).
 if helm template t "${CHART_DIR}" \
   --set cdn.enabled=true \
   --set cdn.baseUrl=cdn.example.com \
-  --set cdn.commitSha=abc1234 \
+  --set cdn.contentRef=abc1234 \
   --set 'cdn.assetExtensions={css,js}' >/dev/null 2>&1; then
   err "schemeless cdn.baseUrl should fail render"
 else
   pass "schemeless cdn.baseUrl fails render"
 fi
 
-# 6. Behavioural: run the rendered initContainer script against a fixture dist
-# containing quoted AND unquoted HTML asset attributes (minified production
-# output) and verify every relative reference is rewritten.
+# 6. Behavioural: run the rendered initContainer script against a fixture dist containing quoted AND unquoted HTML asset attributes (minified production output) and verify every relative reference is rewritten.
 if command -v yq >/dev/null 2>&1; then
   tmp="$(mktemp -d)"
   trap 'rm -rf "${tmp}"' EXIT
@@ -84,13 +78,12 @@ if command -v yq >/dev/null 2>&1; then
   helm template t "${CHART_DIR}" \
     --set cdn.enabled=true \
     --set cdn.baseUrl=https://cdn.example \
-    --set cdn.commitSha=abc1234 \
+    --set cdn.contentRef=abc1234 \
     --set 'cdn.assetExtensions={css,js,ico,png}' \
     --show-only templates/deployment.yaml \
     | yq -r '.spec.template.spec.initContainers[0].args[0]' > "${tmp}/rewrite.sh"
 
-  # Retarget absolute container paths into the temp dir: the source dist first
-  # (it contains /html as a substring), then the shared /html volume.
+  # Retarget absolute container paths into the temp dir: the source dist first (it contains /html as a substring), then the shared /html volume.
   sed -i "s#/usr/share/nginx/html#${tmp}/src#g" "${tmp}/rewrite.sh"
   sed -i "s#/html#${tmp}/html#g" "${tmp}/rewrite.sh"
 
