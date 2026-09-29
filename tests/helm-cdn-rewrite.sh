@@ -89,10 +89,10 @@ if command -v yq >/dev/null 2>&1; then
 
   mkdir -p "${tmp}/src" "${tmp}/html"
   cat > "${tmp}/src/index.html" <<'EOF'
-<!doctype html><html lang=en><head><link rel=icon type=image/x-icon href=/favicon.ico><title>t</title><script defer src=main_bundle.js></script><link rel="stylesheet" href="./style.css"></head><body><img src='/bcit_rev.png'><a href="https://example.org/x.png">ext</a></body></html>
+<!doctype html><html lang=en><head><link rel=icon type=image/x-icon href=favicon.ico><title>t</title><script defer src=main_bundle.js></script><link rel="stylesheet" href="./style.css"></head><body><img src='./bcit_rev.png'><a href="https://example.org/x.png">ext</a></body></html>
 EOF
-  echo 'const a="/bcit_rev.png";' > "${tmp}/src/main_bundle.js"
-  echo 'body{background:url(/bcit_rev.png)}' > "${tmp}/src/style.css"
+  echo 'const a="./bcit_rev.png";' > "${tmp}/src/main_bundle.js"
+  echo 'body{background:url(./bcit_rev.png)}' > "${tmp}/src/style.css"
 
   sh "${tmp}/rewrite.sh"
 

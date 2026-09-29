@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       tag_name:
-        description: "Release tag to package and publish (e.g. v1.2.3)"
+        description: "Release tag to package and publish (e.g. v1.2.3). Only tags whose commit completed a latest-channel build resolve via .by-commit — for older tags, use content_ref."
         required: true
         type: string
       content_ref:
@@ -14,9 +14,6 @@ on:
         required: false
         type: string
         default: ""
-
-env:
-  ASSET_EXTENSIONS: "css,js,map,jpg,jpeg,png,webp,gif,svg,ico,mp4,woff,woff2,ttf,otf,eot"
 
 permissions:
   contents: read
