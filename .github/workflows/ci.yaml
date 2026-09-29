@@ -91,6 +91,7 @@ jobs:
           client-id: ${{ secrets.AZURE_CLIENT_ID_LATEST }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          allow-no-subscriptions: true
 
       - uses: bcit-tlu/.github/.github/actions/cdn-cleanup@main
         with:
