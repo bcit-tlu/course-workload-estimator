@@ -12,9 +12,6 @@ on:
   pull_request:
     branches: [main]
 
-env:
-  ASSET_EXTENSIONS: "css,js,map,jpg,jpeg,png,webp,gif,svg,ico,mp4,woff,woff2,ttf,otf,eot"
-
 # Default to least privilege; jobs elevate only when needed.
 permissions:
   contents: read
@@ -54,7 +51,7 @@ jobs:
     with:
       repo_name: ${{ github.event.repository.name }}
       cdn_base_url: ${{ vars.CDN_BASE_URL_LATEST }}
-      asset_extensions: ${{ env.ASSET_EXTENSIONS }}
+      asset_extensions: "css,js,map,jpg,jpeg,png,webp,gif,svg,ico,mp4,woff,woff2,ttf,otf,eot"
 
   # Upload dist/ verbatim to the latest CDN account under the content-hash prefix and write the .by-commit/<sha> lookup for release-time promotion. Authenticates to Azure via OIDC (UAMI) — no SAS token. The 'latest' GitHub Environment is what the Azure federated credential trusts; without it the OIDC subject won't match and login will fail.
   cdn-upload:
