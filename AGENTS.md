@@ -42,6 +42,12 @@
 - Charts are published to `oci://ghcr.io/bcit-tlu/course-workload-estimator/charts`
 - `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true` is set in all workflows
 
+### CDN channel isolation
+
+- Latest and stable assets live in separate **storage accounts** (communal `CDN_ACCOUNT_NAME_LATEST`/`CDN_ACCOUNT_NAME_STABLE`); the channel boundary is at the account level
+- The repo's container is `course-workload-estimator` on both accounts; public path is `/<repo>/<ref>/` on the per-env Front Door endpoints (`CDN_BASE_URL_{LATEST,STABLE}`); `<ref>` is the content hash of the uploaded file set
+- `ci.yaml` verifies dist/ is host-agnostic and uploads it verbatim to the latest account on every `main` push (writing `.by-commit/<sha>`); `helm-publish.yaml` promotes by server-side copying that prefix latest→stable — no rebuild (the `stable` UAMI has Blob Data Reader on the repo's latest container)
+
 ## Deployment
 
 - Deployed to Kubernetes via Flux CD (see `bcit-tlu/flux-fleet`)
