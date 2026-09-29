@@ -33,7 +33,8 @@ import logo from './assets/bcit_rev.png';
 import Link from '@mui/material/Link';
 import { AnalyticsProvider, useTrackEvent } from './analytics/AnalyticsContext';
 
-const LOGO_SRC = process.env.NODE_ENV === 'production' ? '/bcit_rev.png' : logo;
+// Production uses the relative dist path (the CDN initContainer rewrites it at deploy); the import only serves webpack-dev-server.
+const LOGO_SRC = process.env.NODE_ENV === 'production' ? 'bcit_rev.png' : logo;
 
 let theme = createTheme({
     breakpoints: {

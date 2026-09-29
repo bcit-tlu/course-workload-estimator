@@ -40,27 +40,23 @@ resources:
     memory: 64Mi
 
 # ── High-availability / topology spreading ────────────────────
-# When enabled, adds a required pod anti-affinity rule so that no two
-# replicas land in the same topology zone (e.g. datacenter).
+# When enabled, adds a required pod anti-affinity rule so that no two replicas land in the same topology zone (e.g. datacenter).
 # Requires nodes to be labeled with the chosen topologyKey.
-# NOTE: replicaCount must not exceed the number of distinct zones,
-# otherwise excess pods will remain Pending (hard scheduling constraint).
+# NOTE: replicaCount must not exceed the number of distinct zones, otherwise excess pods will remain Pending (hard scheduling constraint).
 zoneAntiAffinity:
   enabled: false
   topologyKey: topology.kubernetes.io/zone
 
 # Deploy-time Azure CDN rewrite (initContainer).
-# When enabled, an initContainer builds an immutable CDN URL using the
-# CI-injected commit SHA (baseUrl + /<Chart.Name>/<sha>), and rewrites
-# relative asset URLs in HTML/CSS/JS files matching assetExtensions.
+# When enabled, an initContainer builds an immutable CDN URL using the CI-injected content ref (baseUrl + /<Chart.Name>/<ref>), and rewrites relative asset URLs in HTML/CSS/JS files matching assetExtensions.
 cdn:
   enabled: false
   # CDN root domain (e.g. https://<hostname>.azurefd.net)
   baseUrl: ""
   # Asset extensions to rewrite to CDN (e.g. css,js,png,svg)
   assetExtensions: []
-  # Commit SHA — injected by CI at chart package time (do not set manually).
-  commitSha: ""
+  # CDN content ref (dist content hash) — injected by CI at chart package time (do not set manually).
+  contentRef: ""
 
 nodeSelector: {}
 tolerations: []
