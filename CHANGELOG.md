@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.5](https://github.com/bcit-tlu/course-workload-estimator/compare/v1.4.4...v1.4.5) (2026-10-01)
+
+
+### Bug Fixes
+
+* **ci:** add allow-no-subscriptions flag to Azure login steps ([#61](https://github.com/bcit-tlu/course-workload-estimator/issues/61)) ([bf152a0](https://github.com/bcit-tlu/course-workload-estimator/commit/bf152a03d53028c45ab8cc0d1a209cb0e0d0f2d0))
+* **deps:** update all non-major dependencies ([#63](https://github.com/bcit-tlu/course-workload-estimator/issues/63)) ([0468515](https://github.com/bcit-tlu/course-workload-estimator/commit/0468515e6453e9a541fc05f36e8793108ad81178))
+
 ## [1.4.4](https://github.com/bcit-tlu/course-workload-estimator/compare/v1.4.3...v1.4.4) (2026-09-16)
 
 
