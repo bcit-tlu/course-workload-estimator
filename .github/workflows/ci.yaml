@@ -40,6 +40,9 @@ jobs:
       image_name: course-workload-estimator
       context: .
       tag_prefix: "v"
+      # PR builds publish sha-<head>/pr-<n> images for the flux-fleet-v2
+      # preview environment (label a PR `preview`).
+      push_pr_images: true
     secrets: inherit
 
   # Build the static site, verify dist/ is host-agnostic, and hash the uploaded file set into a content ref (latest channel). The Docker build happens separately in the build-course-workload-estimator job.
