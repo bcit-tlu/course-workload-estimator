@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.6](https://github.com/bcit-tlu/course-workload-estimator/compare/v1.4.5...v1.4.6) (2026-10-29)
+
+
+### Bug Fixes
+
+* **deps:** upgrade all deps incl. OpenTelemetry SDK 3.x, fix 11 audit findings ([#72](https://github.com/bcit-tlu/course-workload-estimator/issues/72)) ([e2df2f2](https://github.com/bcit-tlu/course-workload-estimator/commit/e2df2f2515c309a16712fa1337e48119bf21ff06))
+
 ## [1.4.5](https://github.com/bcit-tlu/course-workload-estimator/compare/v1.4.4...v1.4.5) (2026-10-01)
 
 
