@@ -1,4 +1,4 @@
-import { logs, SeverityNumber } from '@opentelemetry/api-logs';
+import { logs, SeverityNumber } from '@opentelemetry/api';
 import {
   LoggerProvider,
   BatchLogRecordProcessor,
@@ -30,8 +30,8 @@ export function initAnalytics() {
     : new ConsoleLogRecordExporter();
 
   const processor = isProduction
-    ? new BatchLogRecordProcessor(logExporter)
-    : new SimpleLogRecordProcessor(logExporter);
+    ? new BatchLogRecordProcessor({ exporter: logExporter })
+    : new SimpleLogRecordProcessor({ exporter: logExporter });
 
   const loggerProvider = new LoggerProvider({
     resource,
@@ -41,6 +41,7 @@ export function initAnalytics() {
   logs.setGlobalLoggerProvider(loggerProvider);
 
   registerInstrumentations({
+    loggerProvider,
     instrumentations: [
       new NavigationInstrumentation(),
       new NavigationTimingInstrumentation(),
