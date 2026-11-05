@@ -15,8 +15,8 @@
   "author": "arolos@bcit.ca",
   "license": "MPL-2.0",
   "devDependencies": {
-    "@babel/cli": "^8.0.6",
-    "@babel/core": "^8.0.10",
+    "@babel/cli": "^8.1.0",
+    "@babel/core": "^8.1.0",
     "@babel/preset-env": "^8.0.7",
     "@babel/preset-react": "^8.0.1",
     "babel-loader": "^10.1.1",
@@ -28,7 +28,7 @@
     "style-loader": "^4.0.0",
     "url-loader": "^4.1.1",
     "webpack": "^5.112.2",
-    "webpack-cli": "^7.2.3",
+    "webpack-cli": "^7.3.1",
     "webpack-dev-server": "^6.1.0"
   },
   "dependencies": {
@@ -36,7 +36,7 @@
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^9.5.0",
     "@mui/material": "^9.5.0",
-    "@mui/x-data-grid": "^9.16.0",
+    "@mui/x-data-grid": "^9.17.0",
     "@opentelemetry/api": "^1.10.0",
     "@opentelemetry/browser-instrumentation": "^0.9.0",
     "@opentelemetry/exporter-logs-otlp-http": "^0.300.0",
